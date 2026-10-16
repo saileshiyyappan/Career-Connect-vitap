@@ -118,8 +118,16 @@ export function resolveCandidateName(u: any): ResolvedNameResult {
     if (isValidCandidateName(u.profile.name)) {
       return { name: u.profile.name.trim(), isUnavailable: false, sourceField: 'profile.name' };
     }
-    const pfName = typeof u.profile.firstName === 'string' ? u.profile.firstName.trim() : '';
-    const plName = typeof u.profile.lastName === 'string' ? u.profile.lastName.trim() : '';
+    const pfName = typeof u.profile.firstName === 'string'
+      ? u.profile.firstName.trim()
+      : typeof u.profile.first_name === 'string'
+      ? u.profile.first_name.trim()
+      : '';
+    const plName = typeof u.profile.lastName === 'string'
+      ? u.profile.lastName.trim()
+      : typeof u.profile.last_name === 'string'
+      ? u.profile.last_name.trim()
+      : '';
     const pCombined = `${pfName} ${plName}`.trim();
     if (isValidCandidateName(pCombined)) {
       return { name: pCombined, isUnavailable: false, sourceField: 'profile.firstName+lastName' };
@@ -157,6 +165,22 @@ export function resolveCandidateName(u: any): ResolvedNameResult {
     if (isValidCandidateName(u.basicInfo.displayName)) {
       return { name: u.basicInfo.displayName.trim(), isUnavailable: false, sourceField: 'basicInfo.displayName' };
     }
+    const bifName = typeof u.basicInfo.firstName === 'string'
+      ? u.basicInfo.firstName.trim()
+      : typeof u.basicInfo.first_name === 'string'
+      ? u.basicInfo.first_name.trim()
+      : '';
+    const bilName = typeof u.basicInfo.lastName === 'string'
+      ? u.basicInfo.lastName.trim()
+      : typeof u.basicInfo.last_name === 'string'
+      ? u.basicInfo.last_name.trim()
+      : '';
+    const biCombined = `${bifName} ${bilName}`.trim();
+    if (isValidCandidateName(biCombined)) {
+      return { name: biCombined, isUnavailable: false, sourceField: 'basicInfo.firstName+lastName' };
+    }
+    if (isValidCandidateName(bifName)) return { name: bifName, isUnavailable: false, sourceField: 'basicInfo.firstName' };
+    if (isValidCandidateName(bilName)) return { name: bilName, isUnavailable: false, sourceField: 'basicInfo.lastName' };
   }
 
   // 8. No genuine stored name found

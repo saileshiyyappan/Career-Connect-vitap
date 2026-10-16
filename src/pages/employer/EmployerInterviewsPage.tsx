@@ -56,7 +56,9 @@ export const EmployerInterviewsPage: React.FC = () => {
 
     setIsSubmitting(true);
     const newInt = await employerPortalService.scheduleInterview({
-      candidateId: cand.id,
+      // Candidate cards are keyed by application id for status updates;
+      // interview authorization requires the candidate's users/{uid} id.
+      candidateId: cand.candidateUid,
       candidateName: cand.name,
       candidateEmail: cand.email,
       jobId: job.id,

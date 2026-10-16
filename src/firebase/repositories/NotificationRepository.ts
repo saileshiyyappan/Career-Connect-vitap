@@ -12,6 +12,7 @@ import {
   onSnapshot,
 } from 'firebase/firestore';
 import { db, isFirebaseConfigured } from '../config/firestore';
+import { auth } from '../config/auth';
 import { FirestoreNotificationDocument } from '../types';
 import { sanitizeFirestoreData } from '../utils/sanitize';
 import { userRepository } from './UserRepository';
@@ -45,6 +46,16 @@ export class NotificationRepository implements INotificationRepository {
   }
 
   async create(notifData: Omit<FirestoreNotificationDocument, 'id' | 'createdAt'>, stableId?: string): Promise<FirestoreNotificationDocument> {
+    if (notifData.type === 'invitation') {
+      const currentUid = auth.currentUser?.uid;
+      if (!currentUid || notifData.senderId !== currentUid) {
+        throw new Error('Only the authenticated employer can send an invitation.');
+      }
+      if (!notifData.userId || notifData.recipientId !== notifData.userId || notifData.userId === currentUid) {
+        throw new Error('Invitation recipient is invalid.');
+      }
+    }
+
     const now = new Date().toISOString();
     const id = stableId || `notif_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
     const newNotif: FirestoreNotificationDocument = {

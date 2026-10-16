@@ -59,7 +59,7 @@ export const OfferManagementPage: React.FC = () => {
 
     setIsSubmitting(true);
     const newOffer = await employerPortalService.createOffer({
-      candidateId: cand.id,
+      candidateId: cand.candidateUid,
       candidateName: cand.name,
       candidateEmail: cand.email,
       jobId: job.id,

@@ -68,6 +68,8 @@ export interface CompanyProfile {
 
 export interface EmployerCandidate {
   id: string;
+  /** Firestore users/{uid} identity. `id` remains the application document id. */
+  candidateUid: string;
   name: string;
   email: string;
   phone: string;
@@ -511,6 +513,7 @@ export const employerPortalService = {
 
         return {
           id: app.id,
+          candidateUid: app.candidateId,
           name: candidateName,
           email: app.candidateEmail || candidateUser?.email || '',
           phone: app.candidatePhone || candidateUser?.phone || candidateUser?.phoneNumber || '',
@@ -599,6 +602,7 @@ export const employerPortalService = {
 
         return {
           id: app.id,
+          candidateUid: app.candidateId,
           name: candidateName,
           email: app.candidateEmail || candidateUser?.email || '',
           phone: app.candidatePhone || candidateUser?.phone || candidateUser?.phoneNumber || '',
